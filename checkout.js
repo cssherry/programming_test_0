@@ -4,6 +4,7 @@ class CheckOut {
     this._cart = {};
   }
 
+  // Calculates total using RULES
   get total() {
     let numberTotal;
 
@@ -16,8 +17,9 @@ class CheckOut {
 
     // Helper function
     function getCurrentCost(rule) {
-      const cost = Math.floor(numberTotal / rule.number) * rule.cost;
-      const remainder = (numberTotal % rule.number);
+      const units = Math.floor(numberTotal / rule.number);
+      const cost = units * rule.cost;
+      const remainder = numberTotal % rule.number;
 
       return {
         remainder,
