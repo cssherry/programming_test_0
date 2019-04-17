@@ -5,26 +5,31 @@ class CheckOut {
   }
 
   get total() {
+    let numberTotal;
+
+
+    return Object.keys(this._cart).reduce((totalForItem, currItem) => {
+      numberTotal = this._cart[currItem];
+      const currItemRule = this._RULES[currItem];
+      return currItemRule.reduce(getTotalForItem, 0) + totalForItem;
+    }, 0);
+
     // Helper function
-    function getCurrentCost(rule, numberItems) {
-      const cost = Math.floor(numberItems / rule.number) * rule.cost;
-      const remainder = (numberItems % rule.number);
+    function getCurrentCost(rule) {
+      const cost = Math.floor(numberTotal / rule.number) * rule.cost;
+      const remainder = (numberTotal % rule.number);
 
       return {
         remainder,
         cost,
-      }
+      };
     }
 
-    return Object.keys(this._cart).reduce((totalForItem, currItem) => {
-      let numberTotal = this._cart[currItem];
-      const currItemRule = this._RULES[currItem];
-      return currItemRule.reduce((totalForRule, curr) => {
-        const result = getCurrentCost(curr, numberTotal);
-        numberTotal = result.remainder;
-        return result.cost + totalForRule;
-      }, 0) + totalForItem;
-    }, 0);
+    function getTotalForItem(totalForRule, curr) {
+      const result = getCurrentCost(curr);
+      numberTotal = result.remainder;
+      return result.cost + totalForRule;
+    }
   }
 
   // Add items to cart
